@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Report: Succeeding on Fiverr as an AI & Data Expert</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: The application is designed as a single-page strategic journey for an aspiring freelancer. It uses a top-down narrative flow, starting with the macro "Market Opportunity," then drilling down into "Navigating Fiverr's unique environment." The centerpiece is an interactive "Gig Explorer" that allows users to actively filter and find their ideal service niche, transforming static tables into a personalized discovery tool. Subsequent sections provide actionable guides on "Building Your Gig" and a "Launch Plan," using visual aids like timelines and diagrams. This structure was chosen to guide the user logically from understanding the 'why' (market trends) to the 'what' (which gigs to offer) and finally the 'how' (how to launch and succeed), making the dense report actionable and less intimidating. -->
+    <!-- Visualization & Content Choices: 
+        - Market Trends (Goal: Inform/Impress): A dynamic bar chart (Chart.js) visualizes the explosive growth in key AI skills, making the opportunity tangible. Large, animated counter stats grab attention. Justification: Visual data is more impactful than text for conveying growth.
+        - Fiverr Paradox (Goal: Explain): A simple two-column HTML/Tailwind layout with icons contrasts the "Commodity" vs. "Expert" markets. Justification: A direct visual comparison clarifies this core strategic concept.
+        - Gig Explorer (Goal: Compare/Organize): An interactive filterable grid of "Gig Cards" (HTML/JS). Justification: This is the most critical interaction. It empowers users to explore opportunities based on their own skillsets, making the content personally relevant and actionable. This is superior to static tables.
+        - Pricing Tiers (Goal: Guide): An interactive component where selecting a gig type populates a 3-tier pricing table. Justification: This makes the abstract pricing advice concrete and easy to understand.
+        - Launch Plan (Goal: Organize): A CSS-based timeline and a circular "Flywheel" diagram visualize the strategic plans. Justification: Visual metaphors make strategic frameworks more memorable and easier to follow than bullet points.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #404040;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #F59E0B;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover:after, .nav-link.active:after {
+            width: 100%;
+        }
+        .stat-card {
+            background-color: #FFFFFF;
+            border: 1px solid #F3EFEA;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .gig-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .gig-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        .flywheel-segment {
+            clip-path: polygon(50% 50%, 0% 100%, 100% 100%);
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header id="header" class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-gray-200/50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold text-gray-800">
+                <a href="#hero">AI Freelancer Playbook</a>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#opportunity" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Opportunity</a>
+                <a href="#explorer" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Gig Explorer</a>
+                <a href="#strategy" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Strategy</a>
+                <a href="#launchpad" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Launchpad</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
+                <span class="w-6 h-0.5 bg-current block mb-1.5"></span>
+                <span class="w-6 h-0.5 bg-current block"></span>
+                <span class="w-4 h-0.5 bg-current block mt-1.5"></span>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+             <a href="#opportunity" class="block py-2 text-gray-600 hover:text-gray-900">Opportunity</a>
+             <a href="#explorer" class="block py-2 text-gray-600 hover:text-gray-900">Gig Explorer</a>
+             <a href="#strategy" class="block py-2 text-gray-600 hover:text-gray-900">Strategy</a>
+             <a href="#launchpad" class="block py-2 text-gray-600 hover:text-gray-900">Launchpad</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="py-20 md:py-32 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-4 leading-tight">Your Roadmap to AI Success on Fiverr</h1>
+                <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8">This interactive report analyzes the Fiverr marketplace for AI & Data experts, transforming key insights into an actionable strategy for your freelance career in 2025 and beyond.</p>
+                <a href="#opportunity" class="bg-amber-500 text-white font-bold py-3 px-8 rounded-full hover:bg-amber-600 transition-all duration-300 shadow-lg hover:shadow-xl">Start Exploring</a>
+            </div>
+        </section>
+
+        <!-- The Opportunity Section -->
+        <section id="opportunity" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">The 2025 AI Gold Rush is Here</h2>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">The demand for specialized AI talent is exploding. Businesses are actively seeking experts to integrate AI into their workflows, creating an unprecedented opportunity for skilled freelancers. This section visualizes the scale of that demand.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 text-center">
+                    <div class="stat-card p-8 rounded-xl">
+                        <div class="text-5xl font-bold text-amber-500 mb-2" id="stat1">0%</div>
+                        <h3 class="text-lg font-semibold text-gray-700">Surge in "AI Agents" Searches</h3>
+                        <p class="text-gray-500">A clear indicator of the hottest market trend.</p>
+                    </div>
+                    <div class="stat-card p-8 rounded-xl">
+                        <div class="text-5xl font-bold text-amber-500 mb-2" id="stat2">0%</div>
+                        <h3 class="text-lg font-semibold text-gray-700">Growth in GenAI Modeling</h3>
+                        <p class="text-gray-500">Demand for high-value generative AI skills is skyrocketing.</p>
+                    </div>
+                    <div class="stat-card p-8 rounded-xl">
+                        <div class="text-5xl font-bold text-amber-500 mb-2" id="stat3">0%</div>
+                        <h3 class="text-lg font-semibold text-gray-700">Surge in Automation Tool Searches</h3>
+                        <p class="text-gray-500">Clients need experts in platforms like Make.com & Zapier.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-200/50">
+                    <h3 class="text-xl md:text-2xl font-bold text-gray-800 text-center mb-6">Demand Growth for Key Freelance Skills</h3>
+                    <div class="chart-container">
+                        <canvas id="demandChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Gig Explorer Section -->
+        <section id="explorer" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Interactive Gig Explorer</h2>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">The market is vast. Use these filters to explore high-opportunity gig categories from the report. Discover where your skills can create the most value and find your perfect niche to dominate on Fiverr.</p>
+                </div>
+
+                <div class="flex justify-center flex-wrap gap-3 mb-10">
+                    <button class="filter-btn active bg-amber-500 text-white font-semibold py-2 px-5 rounded-full" data-filter="all">All Gigs</button>
+                    <button class="filter-btn bg-white text-gray-700 font-semibold py-2 px-5 rounded-full border border-gray-300 hover:bg-gray-100" data-filter="genai">Generative AI</button>
+                    <button class="filter-btn bg-white text-gray-700 font-semibold py-2 px-5 rounded-full border border-gray-300 hover:bg-gray-100" data-filter="agents">AI Agents & Automation</button>
+                    <button class="filter-btn bg-white text-gray-700 font-semibold py-2 px-5 rounded-full border border-gray-300 hover:bg-gray-100" data-filter="analysis">Data Analysis</button>
+                    <button class="filter-btn bg-white text-gray-700 font-semibold py-2 px-5 rounded-full border border-gray-300 hover:bg-gray-100" data-filter="datasci">Data Science & MLOps</button>
+                </div>
+
+                <div id="gig-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Gig cards will be dynamically inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Strategy Section -->
+        <section id="strategy" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                 <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Architecting Your Winning Gig</h2>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">A successful Fiverr presence is more than just a service listing—it's a sales funnel. This section breaks down the key components of a high-converting gig, from crafting the perfect title to strategic pricing.</p>
+                </div>
+                
+                <div class="max-w-4xl mx-auto">
+                    <div class="space-y-4">
+                        <!-- Accordion Item 1: Title & Description -->
+                        <div class="bg-white rounded-lg border border-gray-200/80 shadow-sm">
+                            <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg text-gray-700">
+                                <span>1. Title, SEO & Description</span>
+                                <span class="accordion-icon transition-transform duration-300 transform">+</span>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="p-5 pt-0 text-gray-600">
+                                    <p class="mb-4">Your title is your most important SEO tool. It must start with "I will..." and be packed with keywords a buyer would search for. Your description must address the client's pain point, present your solution, and explain why you're the best choice.</p>
+                                    <h4 class="font-semibold text-gray-700 mb-2">Example: Strong Title</h4>
+                                    <p class="bg-gray-100 p-3 rounded-md text-sm">"I will build a custom Power BI dashboard for sales data visualization"</p>
+                                    <h4 class="font-semibold text-gray-700 mt-4 mb-2">Description Checklist:</h4>
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <li>Clearly define the scope and deliverables.</li>
+                                        <li>Use bolding and bullet points for readability.</li>
+                                        <li>Include a "Why Hire Me?" section to build trust.</li>
+                                        <li>Encourage buyers to contact you before ordering.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Accordion Item 2: Pricing & Tiers -->
+                        <div class="bg-white rounded-lg border border-gray-200/80 shadow-sm">
+                            <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg text-gray-700">
+                                <span>2. Strategic Pricing & Packaging</span>
+                                <span class="accordion-icon transition-transform duration-300 transform">+</span>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="p-5 pt-0 text-gray-600">
+                                    <p class="mb-4">Use Fiverr's 3-tier system (Basic, Standard, Premium) to create a value ladder. This guides buyers to your preferred package. Initially, price competitively to get reviews, then increase prices as your reputation grows.</p>
+                                    <p class="mb-4">Explore the example pricing structures from the report for two high-demand gig types:</p>
+                                    <div class="flex justify-center gap-4 mb-6">
+                                        <label class="font-medium">
+                                            <input type="radio" name="pricing-gig" value="agent" class="mr-2" checked> AI Agent
+                                        </label>
+                                        <label class="font-medium">
+                                            <input type="radio" name="pricing-gig" value="dashboard" class="mr-2"> Power BI Dashboard
+                                        </label>
+                                    </div>
+                                    <div id="pricing-table-container" class="overflow-x-auto">
+                                        <!-- Pricing table will be inserted here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Accordion Item 3: Credibility -->
+                        <div class="bg-white rounded-lg border border-gray-200/80 shadow-sm">
+                            <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg text-gray-700">
+                                <span>3. Building Credibility & Trust</span>
+                                 <span class="accordion-icon transition-transform duration-300 transform">+</span>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="p-5 pt-0 text-gray-600">
+                                     <p class="mb-4">On Fiverr, reputation is everything. It's built on three pillars: your portfolio, your reviews, and your communication.</p>
+                                     <ul class="space-y-3">
+                                        <li><strong class="text-gray-700">Portfolio is Paramount:</strong> Showcase projects that solve real business problems. If you're new, create personal capstone projects and present them as case studies.</li>
+                                        <li><strong class="text-gray-700">First Reviews are Critical:</strong> Offer an introductory price or leverage your network to get your first 5-star reviews quickly. This is crucial for visibility.</li>
+                                        <li><strong class="text-gray-700">Communication is a Metric:</strong> Respond quickly and professionally. Always encourage complex inquiries to be discussed *before* an order is placed to manage expectations and avoid cancellations.</li>
+                                     </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Launchpad Section -->
+        <section id="launchpad" class="py-16 md:py-24 bg-white">
+             <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Your Launchpad for Success</h2>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">Follow this proven roadmap to build momentum and establish yourself as a top-tier expert. This section visualizes the recommended launch sequence and the flywheel model for sustainable long-term growth.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <!-- Phased Launch Sequence -->
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center lg:text-left">Your Phased Launch Sequence</h3>
+                        <div class="relative pl-8">
+                             <div class="absolute left-0 top-0 h-full w-0.5 bg-amber-200"></div>
+                             <div class="space-y-12">
+                                <div class="relative">
+                                    <div class="absolute -left-10 top-0 w-4 h-4 bg-amber-500 rounded-full border-4 border-white"></div>
+                                    <h4 class="font-bold text-lg text-gray-700">Phase 1 (Weeks 1-4): The Foundational Gig</h4>
+                                    <p class="text-gray-600">Launch a niche gig (e.g., Power BI for Marketing) with an intro price. Goal: Secure your first 5-10 reviews to reach "Level One Seller".</p>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-10 top-0 w-4 h-4 bg-amber-500 rounded-full border-4 border-white"></div>
+                                    <h4 class="font-bold text-lg text-gray-700">Phase 2 (Month 2): The High-Growth Gig</h4>
+                                    <p class="text-gray-600">Launch a second gig in a hyper-growth area (e.g., AI Automation with Make.com), leveraging your new reputation to command a higher price.</p>
+                                </div>
+                                <div class="relative">
+                                     <div class="absolute -left-10 top-0 w-4 h-4 bg-amber-500 rounded-full border-4 border-white"></div>
+                                    <h4 class="font-bold text-lg text-gray-700">Phase 3 (Month 3+): The Expert-Tier Gig</h4>
+                                    <p class="text-gray-600">Apply for vetting in the exclusive "Data Science" category. Once approved, launch a premium, high-ticket gig (e.g., Custom ML Model Deployment).</p>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Expert's Flywheel -->
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center lg:text-left">The Expert's Growth Flywheel</h3>
+                        <div class="relative w-full aspect-square max-w-md mx-auto flex items-center justify-center">
+                            <div class="absolute w-full h-full rounded-full bg-gray-100 animate-spin" style="animation-duration: 20s;"></div>
+                             <div class="absolute w-5/6 h-5/6 rounded-full bg-white border border-gray-200"></div>
+                             <div class="absolute w-1/2 h-1/2 rounded-full bg-amber-100 flex items-center justify-center text-center p-4">
+                                <span class="font-bold text-amber-800">Sustainable Growth</span>
+                             </div>
+
+                             <div class="absolute w-full h-full">
+                                <div class="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1/4 text-center w-28">
+                                    <div class="p-3 bg-white rounded-lg shadow-md border border-gray-200">
+                                        <h5 class="font-bold text-sm text-gray-700">Deliver Value</h5>
+                                        <p class="text-xs text-gray-500">Exceed client expectations.</p>
+                                    </div>
+                                </div>
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/4 text-center w-28">
+                                     <div class="p-3 bg-white rounded-lg shadow-md border border-gray-200">
+                                        <h5 class="font-bold text-sm text-gray-700">Earn Reviews</h5>
+                                        <p class="text-xs text-gray-500">Build social proof.</p>
+                                     </div>
+                                </div>
+                                <div class="absolute top-1/2 right-0 transform -translate-y-1/2 translate-x-1/4 text-center w-28">
+                                     <div class="p-3 bg-white rounded-lg shadow-md border border-gray-200">
+                                        <h5 class="font-bold text-sm text-gray-700">Increase Rank</h5>
+                                        <p class="text-xs text-gray-500">Gain visibility.</p>
+                                    </div>
+                                </div>
+                               <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/4 text-center w-28">
+                                     <div class="p-3 bg-white rounded-lg shadow-md border border-gray-200">
+                                        <h5 class="font-bold text-sm text-gray-700">Raise Prices</h5>
+                                        <p class="text-xs text-gray-500">Command premium rates.</p>
+                                     </div>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>Interactive report based on the "Strategic Market Analysis for AI & Data Science Services on Fiverr" document.</p>
+            <p class="text-sm text-gray-400 mt-2">Designed to provide an actionable roadmap for freelance success.</p>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const reportData = {
+            stats: {
+                stat1: { value: 18347, label: 'Surge in "AI Agents" Searches' },
+                stat2: { value: 220, label: 'Growth in GenAI Modeling'},
+                stat3: { value: 1000, label: 'Surge in Automation Tool Searches'}
+            },
+            demandChart: {
+                labels: ['AI Agents', 'Automation Tools (Make/Zapier)', 'Generative AI Modeling', 'Custom GPTs', 'Data Visualization (Power BI)'],
+                data: [18347, 1000, 220, 150, 80] // Representative growth percentages
+            },
+            gigs: [
+                { id: 1, category: 'genai', title: 'Custom GPT for Business Workflows', demand: 'Very High', competition: 'High', price: '$100 - $2,000+', skills: 'Prompt Engineering, API knowledge, workflow analysis.' },
+                { id: 2, category: 'genai', title: 'Fine-Tune an LLM on Proprietary Data', demand: 'High', competition: 'Low', price: '$1,500 - $10,000+', skills: 'Python, RAG, LoRA, Hugging Face Transformers, LangChain.' },
+                { id: 3, category: 'genai', title: 'AI Art Director for Brands', demand: 'Medium', competition: 'Very High', price: '$50 - $800+', skills: 'Midjourney/DALL-E expertise, brand identity, art direction.' },
+                { id: 4, category: 'agents', title: 'AI Sales Agent Automation', demand: 'Hyper-Growth', competition: 'Medium', price: '$500 - $5,000+', skills: 'LangChain, CRM APIs, email automation, sales funnel knowledge.' },
+                { id: 5, category: 'agents', title: 'Custom RAG System for Knowledge Base', demand: 'Hyper-Growth', competition: 'Low', price: '$800 - $7,000+', skills: 'Vector DBs (Pinecone, etc.), LangChain, Python, information retrieval.' },
+                { id: 6, category: 'agents', title: 'Automate Workflows with Make/Zapier & AI', demand: 'Hyper-Growth', competition: 'High', price: '$150 - $2,500+', skills: 'Make.com, Zapier, OpenAI API, logical workflow design.' },
+                { id: 7, category: 'analysis', title: 'Executive Power BI Dashboard', demand: 'High', competition: 'High', price: '$150 - $1,800+', skills: 'Power BI, DAX, SQL, data modeling, business domain knowledge.' },
+                { id: 8, category: 'analysis', title: 'Statistical Analysis for Academic Research', demand: 'Medium', competition: 'Medium', price: '$100 - $1,000+', skills: 'R, SPSS, Python (Pandas, SciPy), statistical methods.' },
+                { id: 9, category: 'analysis', title: 'Automated Excel Reporting with VBA', demand: 'Medium', competition: 'Low', price: '$80 - $750+', skills: 'Advanced Excel, VBA, Macros, data cleaning.' },
+                { id: 10, category: 'datasci', title: 'Develop & Deploy Custom ML Model', demand: 'High', competition: 'Low (Vetted)', price: '$1,000 - $10,000+', skills: 'Python, Scikit-learn, TensorFlow/PyTorch, MLOps, AWS/GCP/Azure.' },
+                { id: 11, category: 'datasci', title: 'Quantitative Financial Modeling', demand: 'High', competition: 'Low (Vetted)', price: '$1,500 - $15,000+', skills: 'Financial knowledge, time-series analysis, Python, R.' },
+                { id: 12, category: 'datasci', title: 'Expert Data Science Consultation', demand: 'Medium', competition: 'Low (Vetted)', price: '$250 - $3,000+', skills: 'Project scoping, business analysis, broad technical knowledge, communication.' },
+            ],
+            pricing: {
+                agent: [
+                    { tier: 'Basic', price: '$300', services: 'Consultation & Scoping; Simple single-task agent setup.' },
+                    { tier: 'Standard', price: '$1,200', services: 'Custom agent dev with LangChain; 2 API integrations.' },
+                    { tier: 'Premium', price: '$4,500+', services: 'Complex multi-agent system; RAG implementation; Cloud deployment.' }
+                ],
+                dashboard: [
+                    { tier: 'Basic', price: '$150', services: 'Dashboard with up to 5 visuals from a single clean source.' },
+                    { tier: 'Standard', price: '$500', services: 'Connect to 2 data sources; Data cleaning; Up to 10 visuals.' },
+                    { tier: 'Premium', price: '$1,800+', services: 'Full ETL pipeline setup; Advanced DAX; Automated refresh.' }
+                ]
+            }
+        };
+
+        // Animate stats on scroll
+        const animateStat = (element, finalValue) => {
+            let start = 0;
+            const duration = 2000;
+            const increment = finalValue / (duration / 16); 
+
+            const update = () => {
+                start += increment;
+                if (start < finalValue) {
+                    element.textContent = Math.ceil(start).toLocaleString() + (finalValue > 1000 ? '' : '%');
+                    requestAnimationFrame(update);
+                } else {
+                    element.textContent = finalValue.toLocaleString() + (finalValue > 1000 ? '' : '%');
+                }
+            };
+            requestAnimationFrame(update);
+        };
+
+        const statObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const stat1El = document.getElementById('stat1');
+                    const stat2El = document.getElementById('stat2');
+                    const stat3El = document.getElementById('stat3');
+                    
+                    animateStat(stat1El, reportData.stats.stat1.value);
+                    animateStat(stat2El, reportData.stats.stat2.value);
+                    animateStat(stat3El, reportData.stats.stat3.value);
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        statObserver.observe(document.getElementById('stat1'));
+
+        // Demand Chart
+        const chartObserver = new IntersectionObserver((entries, observer) => {
+            if (entries[0].isIntersecting) {
+                const ctx = document.getElementById('demandChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: reportData.demandChart.labels,
+                        datasets: [{
+                            label: 'Relative Demand Growth Index',
+                            data: reportData.demandChart.data,
+                            backgroundColor: [
+                                'rgba(245, 158, 11, 0.6)',
+                                'rgba(234, 179, 8, 0.6)',
+                                'rgba(217, 119, 6, 0.6)',
+                                'rgba(180, 83, 9, 0.6)',
+                                'rgba(146, 64, 14, 0.6)'
+                            ],
+                            borderColor: [
+                                'rgba(245, 158, 11, 1)',
+                                'rgba(234, 179, 8, 1)',
+                                'rgba(217, 119, 6, 1)',
+                                'rgba(180, 83, 9, 1)',
+                                'rgba(146, 64, 14, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Growth Index (Logarithmic Scale)', font: { size: 14 } },
+                                type: 'logarithmic',
+                            },
+                            y: { grid: { display: false } }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Growth Index: ${context.raw}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                observer.unobserve(entries[0].target);
+            }
+        }, { threshold: 0.5 });
+        
+        chartObserver.observe(document.getElementById('demandChart'));
+        
+        // Gig Explorer Logic
+        const gigGrid = document.getElementById('gig-grid');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        const renderGigs = (filter = 'all') => {
+            gigGrid.innerHTML = '';
+            const filteredGigs = filter === 'all'
+                ? reportData.gigs
+                : reportData.gigs.filter(gig => gig.category === filter);
+
+            filteredGigs.forEach(gig => {
+                const card = document.createElement('div');
+                card.className = 'gig-card bg-white p-6 rounded-xl shadow-md border border-gray-200/50 flex flex-col';
+                card.innerHTML = `
+                    <h4 class="font-bold text-lg text-gray-800 mb-2">${gig.title}</h4>
+                    <div class="flex-grow">
+                        <p class="text-sm text-gray-500 mb-4">${gig.skills}</p>
+                    </div>
+                    <div class="mt-4 space-y-2 text-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-gray-600">Demand:</span>
+                            <span class="font-bold text-amber-600">${gig.demand}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-gray-600">Competition:</span>
+                            <span class="font-medium text-gray-700">${gig.competition}</span>
+                        </div>
+                         <div class="flex justify-between items-center">
+                            <span class="font-semibold text-gray-600">Price Range:</span>
+                            <span class="font-medium text-gray-700">${gig.price}</span>
+                        </div>
+                    </div>
+                `;
+                gigGrid.appendChild(card);
+            });
+        };
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active', 'bg-amber-500', 'text-white'));
+                filterBtns.forEach(b => b.classList.add('bg-white', 'text-gray-700'));
+                
+                btn.classList.add('active', 'bg-amber-500', 'text-white');
+                btn.classList.remove('bg-white', 'text-gray-700');
+                
+                renderGigs(btn.dataset.filter);
+            });
+        });
+        
+        renderGigs();
+
+        // Accordion Logic
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const icon = header.querySelector('.accordion-icon');
+                
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                    icon.textContent = '+';
+                } else {
+                    // Close other accordions
+                    accordionHeaders.forEach(h => {
+                         h.nextElementSibling.style.maxHeight = null;
+                         h.querySelector('.accordion-icon').textContent = '+';
+                    });
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    icon.textContent = '-';
+                }
+            });
+        });
+
+        // Pricing Table Logic
+        const pricingRadios = document.querySelectorAll('input[name="pricing-gig"]');
+        const pricingContainer = document.getElementById('pricing-table-container');
+
+        const renderPricingTable = (gigType) => {
+            const data = reportData.pricing[gigType];
+            const tableHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    ${data.map(tier => `
+                        <div class="border rounded-lg p-5 flex flex-col ${tier.tier === 'Standard' ? 'bg-amber-50 border-amber-400' : 'bg-gray-50'}">
+                            <h5 class="font-bold text-lg text-center text-gray-800 mb-2">${tier.tier}</h5>
+                            <p class="text-3xl font-bold text-center text-gray-900 mb-4">${tier.price}</p>
+                            <p class="text-sm text-gray-600 text-center flex-grow">${tier.services}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            pricingContainer.innerHTML = tableHTML;
+        };
+
+        pricingRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                renderPricingTable(radio.value);
+            });
+        });
+
+        renderPricingTable('agent');
+
+        // Nav Logic
+        const header = document.getElementById('header');
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.scrollY + header.offsetHeight + 20;
+            let activeSection = 'hero';
+
+            sections.forEach(sec => {
+                if (sec.offsetTop <= scrollPos && (sec.offsetTop + sec.offsetHeight) > scrollPos) {
+                    activeSection = sec.id;
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if(link.getAttribute('href') === `#${activeSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
